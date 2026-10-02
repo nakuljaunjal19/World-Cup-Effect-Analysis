@@ -65,7 +65,7 @@ For knockout matches, I used the extra-time score when it was available so penal
 
 ![Team Performance Query](images/README.md/01_team_performance_query.png)
 
-![Team Performance Result](images/01_team_performance_result.png)
+![Team Performance Result](images/README.md/01_team_performance_result.png)
 
 
 ### Key Finding
@@ -85,9 +85,9 @@ Instead of only comparing the tournament with the few weeks immediately before i
 
 This helped make the comparison more meaningful because the 2022 and 2026 World Cups were held at different times of the year.
 
-![Normal vs World Cup Interest Query](images/02_normal_vs_world_cup_interest.png)
+![Normal vs World Cup Interest Query](images/README.md/02_normal_vs_world_cup_interest.png)
 
-![Normal vs World Cup Interest Result](images/02_normal_vs_world_cup_interest_result.png)
+![Normal vs World Cup Interest Result](images/README.md/02_normal_vs_world_cup_interest_result.png)
 
 
 ### Key Finding
@@ -119,7 +119,7 @@ After seeing how much interest increased during the World Cup, I wanted to compa
 
 For this part, I compared each country's tournament-period interest with its average interest in the weeks immediately before that World Cup. I then compared the 2022 and 2026 percentage increases.
 
-![2022 vs 2026 Interest](images/03_2022_vs_2026_interest.png)
+![2022 vs 2026 Interest](images/README.md/03_2022_vs_2026_interest.png)
 
 
 ### Key Finding
@@ -150,7 +150,7 @@ I created a simple stage ranking to compare how far each team progressed in 2022
 
 I then joined the change in tournament performance with the change in Google Trends interest.
 
-![Performance vs Engagement](images/04_performance_vs_engagement.png)
+![Performance vs Engagement](images/README.md/04_performance_vs_engagement.png)
 
 
 ### Key Finding
@@ -183,9 +183,9 @@ I wanted to keep those two things separate, so I added published FIFA audience f
 
 For a simple comparison, I placed the average Google Trends increase across the 13-country sample next to the U.S. audience for the World Cup final.
 
-![World Cup Viewership Query](images/05_world_cup_viewership.png)
+![World Cup Viewership Query](images/README.md/05_world_cup_viewership.png)
 
-![World Cup Viewership Result](images/05_world_cup_viewership_result.png)
+![World Cup Viewership Result](images/README.md/05_world_cup_viewership_result.png)
 
 
 ### Key Finding
