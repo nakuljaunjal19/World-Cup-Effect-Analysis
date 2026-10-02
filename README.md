@@ -63,7 +63,7 @@ The original match table had separate columns for `team1` and `team2`, so I firs
 
 For knockout matches, I used the extra-time score when it was available so penalty-shootout kicks were not counted as normal match goals.
 
-![Team Performance Query](01_team_performance_query.png)
+![Team Performance Query](images/README.md/01_team_performance_query.png)
 
 ![Team Performance Result](images/01_team_performance_result.png)
 
