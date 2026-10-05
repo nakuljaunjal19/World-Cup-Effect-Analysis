@@ -1,22 +1,29 @@
 # The World Cup Effect
 
-This project analyzes the **2022 and 2026 FIFA World Cups** using SQL, match data, Google Trends, and audience figures.
+This project analyzes the **2022 and 2026 FIFA World Cups** using SQL, match data, Google Trends, and official audience figures.
 
-The goal was to look beyond match results and understand how football interest changes during a World Cup, how 2026 compared with 2022, and whether stronger tournament performance was linked with higher engagement.
+The goal was to look beyond match results and understand how football interest changed once the World Cup began, whether the 2026 host countries experienced a stronger increase in interest, and whether better tournament performance was associated with higher engagement.
 
 
 ### Why I Chose This Project
 
 I wanted to build a SQL project around something I actually follow and enjoy, so I decided to use the FIFA World Cup.
 
-Instead of only looking at scores and winners, I wanted to understand what happens to football interest during the tournament. I was also curious to see whether the 2026 World Cup created more engagement than 2022, and whether teams that performed better also saw a bigger increase in interest.
+Instead of only looking at scores and winners, I wanted to explore what happens to football interest when the tournament starts.
 
-That led me to combine match data with Google Trends and audience figures and look at the World Cup from both a performance and engagement perspective.
+I was also curious about a few things:
+
+- Was the increase in interest bigger in 2026 than in 2022?
+- Did the 2026 host countries see a stronger increase?
+- Did teams that performed better also generate more interest?
+- How large was the actual World Cup audience?
+
+That led me to combine match data, Google Trends, and FIFA audience figures and look at the World Cup from both a performance and engagement perspective.
 
 
 ### Dataset Overview
 
-For this project, I used World Cup match data for **2022 and 2026**, along with weekly Google Trends data and published FIFA audience figures.
+For this project, I used World Cup match data for **2022 and 2026**, weekly Google Trends data, and published FIFA audience figures.
 
 The match data contains **168 matches in total**:
 
@@ -30,7 +37,11 @@ For the football-interest analysis, I used weekly Google Trends data for the **S
 
 The combined Google Trends dataset contains **3,237 weekly observations**.
 
-I also used FIFA audience figures to add actual viewership context alongside the search-interest analysis.
+For each country, the Trends data was downloaded as one continuous series covering both tournament periods. This allowed me to compare changes within the same country over time.
+
+Because Google Trends values are normalized from **0 to 100**, I did not treat the scores as raw search volumes or directly compare one country's score with another country's score.
+
+I focused on the percentage change within each country instead.
 
 
 ### Tools Used
@@ -49,19 +60,19 @@ I also used FIFA audience figures to add actual viewership context alongside the
 
 > **Note:** Some of the SQL queries used CTEs or preparation steps that were longer than what could fit clearly in a screenshot. To keep the project easy to read, the screenshots show the most relevant part of the query and the result instead of every line of SQL.
 
-> For the normal-period comparison in Question 2, I compared World Cup weeks with the same weeks of the year in non-World-Cup years. For Questions 3 and 4, I used the weeks immediately before each World Cup as the baseline because I wanted to compare the increase from the level of interest going into each tournament.
-
 
 ## SQL Analysis
 
 
 ### 1. Which teams performed best in the 2022 and 2026 World Cups?
 
-I started with the match data to get a basic view of how each team performed.
+I started with the match data to get a basic view of team performance.
 
-The original match table had separate columns for `team1` and `team2`, so I first converted the matches into team-level records. From there, I calculated matches played, wins, draws, losses, goals scored, goals conceded, and goal difference.
+The original match table had separate columns for `team1` and `team2`, so I converted the matches into team-level records and calculated matches played, wins, draws, losses, shootout wins, and goal difference.
 
-For knockout matches, I used the extra-time score when it was available so penalty-shootout kicks were not counted as normal match goals.
+One issue I noticed was how penalty shootouts should be handled.
+
+A team can advance by winning a penalty shootout, but the match itself is officially recorded as a draw. Because of that, I kept penalty-shootout wins separate instead of counting them as normal wins.
 
 ![Team Performance Query](images/README.md/01_team_performance_query.png)
 
@@ -70,212 +81,166 @@ For knockout matches, I used the extra-time score when it was available so penal
 
 ### Key Finding
 
-Argentina led the 2022 results with **6 wins in 7 matches**, followed by France with 5 wins.
+Separating shootout wins gave a more accurate view of team performance.
 
-In 2026, Spain recorded **7 wins and 1 draw in 8 matches**, while Argentina also recorded 7 wins.
+For example, Argentina won the 2022 World Cup after advancing through penalty shootouts against the Netherlands and France. Those matches are treated as draws in the match record, while the shootout victories are tracked separately.
 
-This gave me the performance side of the analysis before bringing football interest into the project.
+This made the team-level results easier to interpret without mixing normal match wins with shootout outcomes.
 
 
-### 2. How much higher was football interest during the World Cup than during normal periods?
+### 2. How much did football interest increase when the World Cup began?
 
-After looking at team performance, I wanted to measure the actual **World Cup effect** on football interest.
+After looking at team performance, I wanted to see how much football interest changed once the tournament started.
 
-Instead of only comparing the tournament with the few weeks immediately before it, I compared World Cup weeks with the **same time of year in non-World-Cup years**.
+For each country, I compared its average Google Trends interest during the **8 weeks before the World Cup** with its average interest during the tournament.
 
-This helped make the comparison more meaningful because the 2022 and 2026 World Cups were held at different times of the year.
+This gave me a simple way to measure the increase from the level of attention going into the event.
 
-![Normal vs World Cup Interest Query](images/README.md/02_normal_vs_world_cup_interest.png)
+![Interest Spike Query](images/README.md/02_interest_spike.png)
 
-![Normal vs World Cup Interest Result](images/README.md/02_normal_vs_world_cup_interest_result.png)
+![Interest Spike Result](images/README.md/02_interest_spike_result.png)
 
 
 ### Key Finding
 
-Football interest was much higher during the World Cup than during normal periods across the 13-country sample.
+Football interest increased across all 13 countries in the sample during both tournaments.
 
-In 2022, the average country-level increase was approximately **128.5%**.
+In 2022, the average country-level increase was approximately **111.9%**.
 
 The largest increases were:
 
-- **Netherlands: +239.6%**
-- **Croatia: +220.4%**
-- **Belgium: +212.2%**
+- **Netherlands: +216.5%**
+- **Morocco: +200.2%**
+- **Croatia: +181.4%**
 
-The difference was even larger in 2026, when the average country-level increase was approximately **256.8%**.
+The average increase was even larger in 2026 at approximately **208.2%**.
 
-Some of the biggest increases in 2026 were:
+Some of the largest increases in 2026 were:
 
-- **Mexico: +636.0%**
-- **Netherlands: +364.9%**
-- **Croatia: +334.7%**
+- **Netherlands: +415.4%**
+- **Mexico: +357.1%**
+- **Belgium: +307.8%**
+- **Croatia: +282.8%**
+- **Canada: +262.4%**
 
-One thing I kept in mind was that Google Trends is a relative measure. A large percentage increase does not necessarily mean that country had the highest total number of football searches. It means interest increased strongly compared with that country's normal level.
+A large percentage increase does not necessarily mean a country had the highest total search volume. It means football interest increased strongly compared with that country's own pre-tournament level.
 
 
-### 3. Was the 2026 interest spike larger than 2022?
+### 3. Did the 2026 host countries experience a larger increase in football interest?
 
-After seeing how much interest increased during the World Cup, I wanted to compare the two tournaments directly.
+One thing that stood out in the 2026 results was that **USA, Canada, and Mexico were also the three host countries**.
 
-For this part, I compared each country's tournament-period interest with its average interest in the weeks immediately before that World Cup. I then compared the 2022 and 2026 percentage increases.
+Since hosting the tournament could create additional media attention and local interest, I wanted to compare the three hosts with the other 10 countries in the sample.
 
-![2022 vs 2026 Interest](images/README.md/03_2022_vs_2026_interest.png)
+I grouped the countries into:
+
+- **Host Countries:** USA, Canada, Mexico
+- **Other Selected Countries:** the remaining 10 countries
+
+I then compared their average increase in football interest during the 2026 World Cup.
+
+![Host Country Effect](images/README.md/03_host_country_effect.png)
 
 
 ### Key Finding
 
-Mexico showed the largest increase in its World Cup spike between the two tournaments.
+The three host countries had an average football-interest increase of approximately **278.0%** during the 2026 tournament.
 
-Its interest increase went from **107.5% in 2022 to 357.1% in 2026**, a difference of **249.6 percentage points**.
+The other 10 selected countries averaged approximately **187.2%**.
 
-Other large changes included:
+This suggests that the host countries experienced a stronger increase in football interest within this sample.
 
-- **Netherlands: +198.9 percentage points**
-- **USA: +163.2 percentage points**
-- **Belgium: +159.2 percentage points**
-- **Argentina: +128.3 percentage points**
-
-Across the 13 selected countries, the average increase from the immediate pre-tournament baseline was approximately **111.9% in 2022** and **208.2% in 2026**.
-
-Within this sample, the 2026 tournament produced a much larger search-interest spike than 2022.
+However, this does not prove that hosting caused the difference. The host group contains only three countries, and other factors such as team performance, media coverage, existing football popularity, and tournament storylines could also affect search interest.
 
 
-### 4. Did better tournament performance lead to higher engagement?
+### 4. Did teams that performed better also see a bigger increase in football interest?
 
-This was one of the questions I was most interested in.
+After comparing the two tournaments, I wanted to see whether changes in team performance were reflected in changes in football interest.
 
-I created a simple stage ranking to compare how far each team progressed in 2022 and 2026:
+I created a simple ranking based on the deepest stage each team reached:
 
 **1 = Group Stage, 2 = Round of 32, 3 = Round of 16, 4 = Quarterfinal, 5 = Semifinal, 6 = Third Place, 7 = Final**
 
-I then joined the change in tournament performance with the change in Google Trends interest.
+I then compared each team's tournament-stage change with the change in its Google Trends interest spike between 2022 and 2026.
 
 ![Performance vs Engagement](images/README.md/04_performance_vs_engagement.png)
 
 
 ### Key Finding
 
-There were several examples where better tournament performance and stronger engagement moved in the same direction.
+For some countries, better performance and stronger football interest moved in the same direction.
 
 For example:
 
-- **Spain:** stage change +4, engagement-spike change +58.5 percentage points
-- **Belgium:** stage change +3, engagement-spike change +159.2 percentage points
-- **Mexico:** stage change +2, engagement-spike change +249.6 percentage points
-- **Canada:** stage change +2, engagement-spike change +117.9 percentage points
+- **Spain:** stage change +4, interest-spike change +58.5 percentage points
+- **Belgium:** stage change +3, interest-spike change +159.2 percentage points
+- **Mexico:** stage change +2, interest-spike change +249.6 percentage points
+- **Canada:** stage change +2, interest-spike change +117.9 percentage points
 
-However, the relationship was not consistent.
+But the relationship was not consistent across every country.
 
-The Netherlands reached an earlier stage in 2026 but still saw its engagement spike increase by **198.9 percentage points**.
+The Netherlands reached an earlier stage in 2026 but still had an interest spike that was **198.9 percentage points higher** than in 2022.
 
-Croatia also reached an earlier stage but still experienced a considerably larger interest spike than in 2022.
+Croatia also reached an earlier stage while still experiencing a considerably larger interest spike.
 
-This showed me that tournament performance can be part of the reason interest changes, but it does not explain the whole story.
+This suggests that tournament performance may contribute to football interest, but it does not explain the full change by itself.
 
-The stage ranking is only a rough measure of tournament progression, especially because the 2026 format included an additional Round of 32.
+The stage ranking is only a rough comparison because the 2026 tournament included an additional Round of 32, so the tournament structures were not identical.
 
 
-### 5. How did actual World Cup viewership compare with online interest?
+### 5. What do official audience figures tell us about the scale of the World Cup?
 
-Google Trends measures online search interest, but it does not tell us how many people actually watched the tournament.
+Google Trends measures search interest, but it does not tell us how many people actually watched or engaged with the tournament.
 
-I wanted to keep those two things separate, so I added published FIFA audience figures as the final part of the analysis.
+For the final part of the project, I added published FIFA audience figures to give some context around the overall scale of the World Cup.
 
-For a simple comparison, I placed the average Google Trends increase across the 13-country sample next to the U.S. audience for the World Cup final.
+I kept these figures separate from the Google Trends calculations because they measure different things.
 
-![World Cup Viewership Query](images/README.md/05_world_cup_viewership.png)
+![World Cup Audience Query](images/README.md/05_world_cup_audience.png)
 
-![World Cup Viewership Result](images/README.md/05_world_cup_viewership_result.png)
+![World Cup Audience Result](images/README.md/05_world_cup_audience_result.png)
 
 
 ### Key Finding
 
-The average Google Trends increase from the immediate pre-tournament baseline rose from approximately **111.9% in 2022 to 208.2% in 2026**.
+FIFA reported approximately **5 billion people engaged with the 2022 World Cup across media**.
 
-At the same time, the U.S. audience for the World Cup final increased from **almost 26 million in 2022** to a **62.8 million combined average audience across FOX and Telemundo in 2026**.
+For the 2026 tournament, FIFA reported that **nearly 6 billion people had engaged with the competition**, although the consolidated broadcast reporting was still being completed.
 
-I stored the 2022 figure as 26.0 million in the SQL table for comparison, but the published figure is described as **almost 26 million**, so I treated it as approximate.
+The U.S. audience for the final also stood out.
 
-I would not say that higher online search interest caused higher viewership. They are different measures and cover different populations.
+The 2022 World Cup final had a combined U.S. audience of **almost 26 million**, while the 2026 final had a reported **62.8 million combined average audience across FOX and Telemundo**.
 
-What the comparison shows is that both search interest in the selected countries and U.S. final viewership were considerably higher around the 2026 tournament.
+I did not calculate a direct percentage increase between these audience figures because the published metrics are not all defined in exactly the same way.
+
+Instead, I used them as supporting context for the scale of the two tournaments.
 
 
 ## Key Takeaways
 
-Using SQL to connect match performance, Google Trends, and audience data led to a few findings that stood out:
+Using SQL to connect tournament performance, Google Trends, and audience data led to a few findings that stood out:
 
-- **Football interest was much higher during World Cup periods than during comparable normal periods.**
-- The average normal-period-to-World-Cup increase across the 13-country sample was approximately **128.5% in 2022 and 256.8% in 2026**.
-- **Mexico showed the largest increase in its tournament spike compared with 2022**, followed by the Netherlands, USA, and Belgium.
-- **Better tournament performance did not always lead to a larger engagement increase.** Some teams generated considerably more interest even after reaching an earlier stage.
-- **Search interest and viewership are different measures**, so I kept them separate instead of treating Google Trends as audience data.
-- **U.S. World Cup final viewership was substantially higher in 2026**, increasing from almost 26 million in 2022 to 62.8 million in 2026.
-- From a SQL perspective, this project gave me experience working with **CTEs, joins, conditional aggregation, views, date-based analysis, percentage calculations, `FILTER`, `COALESCE`, and window functions**.
+- **Football interest increased sharply once the World Cup began** across all 13 countries in the sample.
+- The average increase from the pre-tournament baseline was approximately **111.9% in 2022 and 208.2% in 2026**.
+- **The three 2026 host countries showed a larger average increase in football interest** than the other 10 selected countries.
+- **Better tournament performance did not always mean a larger increase in interest.** Some teams generated much stronger search interest despite reaching an earlier stage.
+- **Google Trends and audience figures measure different things**, so I kept search interest and actual audience data separate.
+- The official FIFA figures show the scale of the event, with billions of people engaging with both tournaments.
+- From a SQL perspective, the project gave me experience working with **CTEs, joins, conditional aggregation, views, date-based analysis, percentage calculations, `FILTER`, `COALESCE`, and data-quality checks**.
 
 
 ## Final Thoughts
 
 I liked this project because it started with a sport I already follow, but the analysis ended up going beyond match results.
 
-The part that stood out most to me was seeing how much football interest changed during the World Cup compared with normal periods. I also found it interesting that better tournament performance did not always lead to a larger increase in engagement.
+The biggest thing I noticed was that football interest around a World Cup depends on more than just how far a team progresses.
 
-The project also reminded me that metrics that sound similar can measure very different things. Google Trends, online engagement, and television viewership all tell us something about World Cup interest, but they should not be treated as the same measure.
+Hosting the tournament, existing football interest, media attention, and other factors can all play a role.
 
-There were also a few practical data issues along the way. The original match data was nested JSON, goal minutes included stoppage time such as `90+7`, the two tournaments had different formats, and my first goal ID was not actually unique.
+I also learned that metrics that sound similar can measure very different things. Google Trends, media engagement, and television audiences all tell us something about World Cup interest, but they should not be treated as the same measure.
+
+There were also a few practical data issues along the way. The original match data was nested JSON, goal minutes included stoppage time such as `90+7`, tournament formats were different, and my first goal ID was not actually unique.
 
 Working through those issues made this feel much closer to a real analysis than a normal SQL practice exercise.
 
 Thanks for reading!
-
-
-
-
-
-
-
- 
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
