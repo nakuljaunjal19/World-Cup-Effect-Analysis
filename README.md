@@ -1,3 +1,5 @@
+![The World Cup Effect](images/README.md/world_cup_effect_cover.png)
+
 # The World Cup Effect
 
 This project analyzes the **2022 and 2026 FIFA World Cups** using SQL, match data, Google Trends, and official audience figures.
